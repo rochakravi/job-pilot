@@ -3,4 +3,6 @@ export type NavigationProps = {
   onNext: () => void;
   isFirstStep?: boolean;
   isLastStep?: boolean;
+  profileId?: string | null;
+  onProfileSaved?: (profileId: string) => void;
 };

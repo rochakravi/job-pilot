@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { NavigationProps } from "./navigation";
+import ProfileService from "../api/profile/profile.service";
 
 type Resume = {
   pdfName: string;
@@ -10,12 +11,10 @@ type Resume = {
   uploadedAt: string;
 };
 
-export default function ResumeUpload({ onBack, onNext }: NavigationProps) {
+export default function ResumeUpload({ onBack, onNext, profileId }: NavigationProps) {
   const [resumes, setResumes] = useState<Resume[]>([]);
 
-  const handleFile = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -25,14 +24,27 @@ export default function ResumeUpload({ onBack, onNext }: NavigationProps) {
       return;
     }
 
-    const resume: Resume = {
-      pdfName: file.name,
-      location: file.name,
-      title: file.name.replace(".pdf", ""),
-      uploadedAt: new Date().toISOString(),
-    };
+    if (!profileId) {
+      alert("Profile not created yet.");
+      return;
+    }
 
-    setResumes((prev) => [...prev, resume]);
+    try {
+      const updatedProfile = await ProfileService.updateResume(profileId, file);
+      console.log("Resume uploaded successfully:", updatedProfile);
+
+      const resume: Resume = {
+        pdfName: file.name,
+        location: file.name,
+        title: file.name.replace(".pdf", ""),
+        uploadedAt: new Date().toISOString(),
+      };
+
+      setResumes((prev) => [...prev, resume]);
+    } catch (error) {
+      console.error("Resume upload failed:", error);
+      alert("Resume upload failed. Please try again.");
+    }
   };
 
   return (

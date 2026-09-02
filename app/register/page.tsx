@@ -17,17 +17,17 @@ import RecruiterCareerProfile from "./RecruiterCareerProfile";
 
 const steps = [
   { title: "Personal Information", description: "Tell us about yourself.", component: PersonalInformation },
-  { title: "Professional Summary", description: "Highlight your experience and strengths.", component: ProfessionalSummary },
-  { title: "Skills", description: "Add your professional and technical skills.", component: Skills },
-  { title: "Programming Languages", description: "Add the languages you know.", component: ProgrammingLanguages },
-  { title: "Tools & Technologies", description: "Add the tools and platforms you use.", component: ToolsTechnologies },
-  { title: "Work Experience", description: "Add your professional experience.", component: WorkExperience },
-  { title: "Projects", description: "Showcase your most important projects.", component: Projects },
-  { title: "Education", description: "Add your academic qualifications.", component: Education },
-  { title: "Certifications", description: "Add your credentials and certifications.", component: Certifications },
+  // { title: "Professional Summary", description: "Highlight your experience and strengths.", component: ProfessionalSummary },
+  // { title: "Skills", description: "Add your professional and technical skills.", component: Skills },
+  // { title: "Programming Languages", description: "Add the languages you know.", component: ProgrammingLanguages },
+  // { title: "Tools & Technologies", description: "Add the tools and platforms you use.", component: ToolsTechnologies },
+  // { title: "Work Experience", description: "Add your professional experience.", component: WorkExperience },
+  // { title: "Projects", description: "Showcase your most important projects.", component: Projects },
+  // { title: "Education", description: "Add your academic qualifications.", component: Education },
+  // { title: "Certifications", description: "Add your credentials and certifications.", component: Certifications },
   { title: "Resume Upload", description: "Upload your latest resume.", component: ResumeUpload },
-  { title: "Job Preferences", description: "Tell us what opportunities you want.", component: JobPreferences },
-  { title: "Recruiter / Career Profile", description: "Help recruiters understand your goals.", component: RecruiterCareerProfile },
+  // { title: "Job Preferences", description: "Tell us what opportunities you want.", component: JobPreferences },
+  // { title: "Recruiter / Career Profile", description: "Help recruiters understand your goals.", component: RecruiterCareerProfile }
 ] as const;
 
 const subscribeToHydration = () => () => {};
@@ -40,6 +40,7 @@ function RegisterWorkflow() {
   const requestedStep = Number(searchParams.get("step"));
   const currentStep = requestedStep >= 1 && requestedStep <= steps.length ? requestedStep - 1 : 0;
   const [isComplete, setIsComplete] = useState(false);
+  const [profileId, setProfileId] = useState<string | null>(null);
 
   const goToStep = (step: number) => {
     setIsComplete(false);
@@ -96,6 +97,8 @@ function RegisterWorkflow() {
                         <StepComponent
                           onBack={() => goToStep(Math.max(0, currentStep - 1))}
                           onNext={() => currentStep === steps.length - 1 ? setIsComplete(true) : goToStep(currentStep + 1)}
+                          profileId={profileId}
+                          onProfileSaved={(id: string) => setProfileId(id)}
                           isFirstStep={currentStep === 0}
                           isLastStep={currentStep === steps.length - 1}
                         />
